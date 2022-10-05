@@ -1,23 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
+import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 
 export default function Login() {
-  return (
-    <>
-      {/*
-        This example requires updating your template:
+  const { data: session } = useSession();
 
-        ```
-        <html class="h-full bg-gray-50">
-        <body class="h-full">
-        ```
-      */}
+  const handleSignin = (e) => {
+    e.preventDefault();
+    signIn();
+  };
+  const handleSignout = (e) => {
+    e.preventDefault();
+    signOut();
+  };
+
+  useEffect(() => {
+    console.log("login page");
+    return () => {};
+  }, []);
+
+  if (!session) {
+    return (
       <article id="login" className="sm:bg-gray-100 min-h-screen">
         <div className="min-h-screen flex flex-col">
           <div className="flex-grow"></div>
-          <div className="flex h-full items-center justify-center py-6 px-4 sm:px-6 lg:px-8 flex-grow">
+          <div className="flex h-full items-center justify-center py-6 px-5 sm:px-6 lg:px-8 flex-grow">
             <div className="w-full max-w-md space-y-4">
               <div className="sm:border sm:p-8 bg-white">
                 <div>
@@ -63,26 +72,38 @@ export default function Login() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="text-center space-y-6">
                     <div className="flex items-center">
-                      <input
-                        id="remember-me"
-                        name="remember-me"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <label
-                        htmlFor="remember-me"
-                        className="ml-2 block text-sm text-gray-900"
-                      >
-                        자동 로그인
-                      </label>
+                      <span
+                        className="block w-full bg-gray-300"
+                        style={{ height: "1px" }}
+                      ></span>
+                      <span className="whitespace-nowrap px-6 bg-white">
+                        또는
+                      </span>
+                      <span
+                        className="block w-full bg-gray-300"
+                        style={{ height: "1px" }}
+                      ></span>
                     </div>
-
-                    <div className="text-sm">
+                    <div className="text-md">
+                      <button
+                        onClick={handleSignin}
+                        className="w-full flex items-center justify-center font-medium text-indigo-900 hover:text-indigo-800"
+                      >
+                        <Image
+                          src="/facebook_logo.svg"
+                          alt="페이스북 로그인"
+                          width={20}
+                          height={20}
+                        />
+                        <span className="ml-2">Fackbook으로 로그인</span>
+                      </button>
+                    </div>
+                    <div className="text-xs">
                       <a
                         href="#"
-                        className="font-medium text-indigo-600 hover:text-indigo-500"
+                        className="font-medium text-gray-500 hover:text-gray-400"
                       >
                         비밀번호를 잊으셨나요?
                       </a>
@@ -106,7 +127,7 @@ export default function Login() {
                 </form>
               </div>
               <div className="sm:border sm:p-6 bg-white text-center">
-                <p class="text-sm">
+                <p className="text-sm">
                   계정이 없으신가요?
                   <Link href="/signup">
                     <a className="font-bold ml-2 text-indigo-600 hover:text-indigo-500">
@@ -127,6 +148,8 @@ export default function Login() {
           </footer>
         </div>
       </article>
-    </>
-  );
+    );
+  } else {
+    return <div>{session.user.email}</div>;
+  }
 }
