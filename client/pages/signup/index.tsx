@@ -1,9 +1,67 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { UserPlusIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
+import Router from "next/router";
+import { useForm, Resolver } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+type FormValues = {
+  emailOrPhone: string;
+  name: string;
+  userName: string;
+  password: string;
+  passwordConfirm: string;
+};
+
+// const resolver: Resolver<FormValues> = async (values) => {
+//   return {
+//     values: values ? values : {},
+//     errors: !values.emailOrPhone
+//       ? {
+//           emailOrPhone: {
+//             type: "required",
+//             message: "필수 값입니다",
+//           },
+//         }
+//       : {} || !values.name
+//       ? {
+//           name: {
+//             type: "required",
+//             message: "필수 값입니다",
+//           },
+//         }
+//       : {},
+//   };
+// };
+
+const schema = yup.object().shape({
+  emailOrPhone: yup.string().email().required(),
+  name: yup.string().required(),
+  userName: yup.string().required(),
+  password: yup.string().min(7).max(10).required(),
+  passwordConfirm: yup
+    .string()
+    .oneOf([yup.ref("password"), null])
+    .required(),
+});
 
 export default function SignUp() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({ resolver: yupResolver(schema) });
+
+  const onValid = () => {
+    Router.push("/login");
+  };
+
+  const onInvalid = () => {
+    console.log("errors", errors);
+  };
+
   useEffect(() => {
     console.log("Signp page");
     return () => {};
@@ -44,47 +102,61 @@ export default function SignUp() {
                     </button>
                   </div>
                 </div>
-                <form className="mt-8 space-y-6" action="#" method="POST">
+                <form
+                  className="mt-8 space-y-6"
+                  action="#"
+                  method="POST"
+                  onSubmit={handleSubmit(onValid, onInvalid)}
+                >
                   <input type="hidden" name="remember" defaultValue="true" />
                   <div className="-space-y-px rounded-md shadow-sm">
                     <div>
-                      <label htmlFor="email-address" className="sr-only">
+                      <label htmlFor="email-phone" className="sr-only">
                         휴대폰 번호 또는 이메일 주소
                       </label>
                       <input
-                        id="email-address"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        required
+                        {...register("emailOrPhone", {
+                          validate: {
+                            email: (value) =>
+                              !value.includes("@") || "이메일 형식이 아닙니다",
+                          },
+                          required: true,
+                        })}
+                        id="email-phone"
+                        name="emailOrPhone"
+                        type="text"
                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-4 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         placeholder="휴대폰 번호 또는 이메일 주소"
                       />
                     </div>
                     <div>
-                      <label htmlFor="email-address" className="sr-only">
+                      <label htmlFor="name" className="sr-only">
                         성명
                       </label>
                       <input
-                        id="email-address"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        required
+                        {...register("name", {
+                          minLength: 2,
+                          required: true,
+                        })}
+                        id="name"
+                        name="name"
+                        type="text"
                         className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-4 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         placeholder="성명"
                       />
                     </div>
                     <div>
-                      <label htmlFor="email-address" className="sr-only">
+                      <label htmlFor="user-name" className="sr-only">
                         사용자 이름
                       </label>
                       <input
-                        id="email-address"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        required
+                        {...register("userName", {
+                          minLength: 2,
+                          required: true,
+                        })}
+                        id="user-name"
+                        name="userName"
+                        type="text"
                         className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-4 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         placeholder="사용자 이름"
                       />
@@ -94,16 +166,45 @@ export default function SignUp() {
                         비밀번호
                       </label>
                       <input
+                        {...register("password", {
+                          required: true,
+                        })}
                         id="password"
                         name="password"
                         type="password"
                         autoComplete="current-password"
-                        required
+                        className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-4 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                        placeholder="비밀번호"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="passwordConfirm" className="sr-only">
+                        비밀번호
+                      </label>
+                      <input
+                        {...register("passwordConfirm", {
+                          required: true,
+                        })}
+                        id="password-confirm"
+                        name="passwordConfirm"
+                        type="password"
+                        autoComplete="current-password"
                         className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-4 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         placeholder="비밀번호"
                       />
                     </div>
                   </div>
+                  {errors &&
+                    Object.entries(errors).map(([key, error]) => {
+                      return (
+                        <>
+                          <span className="text-red-400 font-bold">
+                            {error.message}
+                          </span>
+                          <br />
+                        </>
+                      );
+                    })}
 
                   <div>
                     <button
