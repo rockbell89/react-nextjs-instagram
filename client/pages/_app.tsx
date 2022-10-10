@@ -2,6 +2,7 @@ import AppLayout from "../components/layout/AppLayout";
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
 import { AuthProvider } from "../contexts/auth";
+import { wrapper } from "../store";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -15,4 +16,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);

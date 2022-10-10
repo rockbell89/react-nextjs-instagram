@@ -1,28 +1,31 @@
-import { type } from "os";
+import { useRouter } from "next/router";
 import { createContext, useState } from "react";
 
 const AuthContext = createContext({
-  isLogined: true,
-  handelSetLogIn: (e: EventTarget) => {},
-  handelSetLogOut: (e: EventTarget) => {},
+  isLogined: false,
+  handleSetLogIn: (e: EventTarget) => {},
+  handleSetLogOut: (e: EventTarget) => {},
 });
 
 const AuthProvider = ({ children }) => {
+  const router = useRouter();
   const [isLogined, setIsLogined] = useState(false);
 
-  const handelSetLogIn = () => {
+  const handleSetLogIn = () => {
     console.log("로그인");
     setIsLogined((isLogined) => !isLogined);
+    router.push("/");
   };
-  const handelSetLogOut = () => {
+  const handleSetLogOut = () => {
     console.log("로그아웃");
     setIsLogined((isLogined) => !isLogined);
+    router.push("/");
   };
 
   const value = {
     isLogined,
-    handelSetLogIn,
-    handelSetLogOut,
+    handleSetLogIn,
+    handleSetLogOut,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

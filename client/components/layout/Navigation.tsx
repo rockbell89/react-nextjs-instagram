@@ -11,7 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 
-const Navigation = ({ isLogined, handelSetLogOut }) => {
+const Navigation = ({ isLogined, handleSetLogOut }) => {
   return (
     <nav className="flex flex-col justify-between border-r p-4 w-60 bg-white">
       <div>
@@ -84,7 +84,7 @@ const Navigation = ({ isLogined, handelSetLogOut }) => {
         </ul>
       </div>
       <div className="p-3">
-        <button className="flex items-center" onClick={handelSetLogOut}>
+        <button className="flex items-center" onClick={() => handleSetLogOut()}>
           <Bars3Icon className="w-8" aria-hidden="true"></Bars3Icon>
           <span className="mx-2">더 보기</span>
         </button>

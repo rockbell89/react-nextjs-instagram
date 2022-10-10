@@ -7,16 +7,12 @@ import AuthContext from "../contexts/auth";
 
 type Props = {};
 
-const LgoinForm = ({ isLogined, handelSetLogIn }) => {
+const LgoinForm = ({ isLogined, handleSetLogIn }) => {
   const { data: session } = useSession();
 
   const handleSignin = (e) => {
     e.preventDefault();
     signIn();
-  };
-  const handleSignout = (e) => {
-    e.preventDefault();
-    signOut();
   };
 
   useEffect(() => {
@@ -46,7 +42,7 @@ const LgoinForm = ({ isLogined, handelSetLogIn }) => {
                   className="mt-8 space-y-6"
                   action="#"
                   method="POST"
-                  onSubmit={handelSetLogIn}
+                  onSubmit={() => handleSetLogIn()}
                 >
                   <input type="hidden" name="remember" defaultValue="true" />
                   <div className="-space-y-px rounded-md shadow-sm">
@@ -94,7 +90,7 @@ const LgoinForm = ({ isLogined, handelSetLogIn }) => {
                     </div>
                     <div className="text-md">
                       <button
-                        onClick={handleSignin}
+                        onClick={() => handleSignin}
                         className="w-full flex items-center justify-center font-medium text-indigo-900 hover:text-indigo-800"
                       >
                         <Image

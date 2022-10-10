@@ -3,7 +3,7 @@ import LoginForm from "../LgoinForm";
 import Navigation from "./Navigation";
 import styles from "../../styles/Home.module.css";
 import classNames from "classnames";
-import AuthContext, { AuthProvider } from "../../contexts/auth";
+import AuthContext from "../../contexts/auth";
 
 const RenderPropSample = ({ children }) => {
   return <div>결과 : {children(5)}</div>;
@@ -11,7 +11,7 @@ const RenderPropSample = ({ children }) => {
 
 function AppLayout({ children }) {
   // const [isLogined, setIsLogined] = useState(false);
-  const { isLogined, handelSetLogIn, handelSetLogOut } =
+  const { isLogined, handleSetLogIn, handleSetLogOut } =
     useContext(AuthContext);
 
   const LoginFormWapper = () => {
@@ -19,7 +19,7 @@ function AppLayout({ children }) {
       <main className="bg-gray-100">
         <LoginForm
           isLogined={isLogined}
-          handelSetLogIn={handelSetLogIn}
+          handleSetLogIn={handleSetLogIn}
         ></LoginForm>
       </main>
     );
@@ -31,7 +31,7 @@ function AppLayout({ children }) {
         <div className="flex">
           <Navigation
             isLogined={isLogined}
-            handelSetLogOut={handelSetLogOut}
+            handleSetLogOut={handleSetLogOut}
           ></Navigation>
           <div className="w-full h-screen overflow-y-auto">
             <div
@@ -43,7 +43,9 @@ function AppLayout({ children }) {
               )}
             >
               <section className="flex-1 w-full my-4">{children}</section>
-              <section className="flex-1 w-full my-4">사이드영역</section>
+              <section className="flex-1 w-full my-4">
+                <div className="border p-4 my-4 bg-white"></div>
+              </section>
             </div>
           </div>
         </div>
